@@ -1,0 +1,14 @@
+{
+  "name": "sometimemachine",
+  "version": "0.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "BSD",
+  "description": "ERROR: No README.md file found!",
+  "dependencies": {
+    "sqlite3": "~2.1.5",
+    "canvas": "~0.13.1"
+  }
+}
