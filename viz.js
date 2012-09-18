@@ -4,7 +4,7 @@ var Canvas = require('canvas'),
 var sqlite3 = require('sqlite3').verbose();
 var db = new sqlite3.Database('changesets.sqlite');
 
-var w = 60000, h = 60000;
+var w = 20000, h = 20000;
 var c = new Canvas(w, h);
 var ctx = c.getContext('2d');
 
