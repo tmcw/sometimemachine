@@ -2,7 +2,7 @@
 
 import sqlite3, sys
 import xml.parsers.expat
-import dateutil.parser
+from dateutil.parser import parse
 
 if (len(sys.argv) < 2):
     raise 'Usage: stm.py changeset.osm db.sqlite'
@@ -32,14 +32,15 @@ def save(attrib):
     else:
         lat = 0
         lon = 0
+    attrib_id = int(attrib['id'])
     cur.execute(query,
-        (int(attrib['id']),
+        (attrib_id,
         int(attrib.get('uid', -1)),
         lon,
         lat,
-        int(dateutil.parser.parse(attrib["created_at"]).strftime('%s')),
+        int(parse(attrib["created_at"]).strftime('%s')),
         int(attrib['num_changes'])))
-    if (int(attrib['id']) % 100000 == 0):
+    if (attrib_id % 100000 == 0):
         conn.commit()
         print "%d done" % int(attrib['id'])
 

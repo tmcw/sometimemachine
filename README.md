@@ -30,3 +30,19 @@ Initialize an SQLite file:
 Import a changeset dump into sqlite:
 
     python stm.py changesets-latest.osm changesets.sqlite
+
+ Indexes
+
+     create index uid_idx on osm_changeset (user_id);
+
+## Products
+
+`unique_per_day.js`
+
+* [Active Contributors Per Month](http://bl.ocks.org/3750490)
+* [Active Contributors Per Day](http://bl.ocks.org/3750519)
+
+`two_edit_per_month.js`
+
+* [Contributors by Level By Month](http://bl.ocks.org/3751212)
+* [up to 10 edits](http://bl.ocks.org/3751255)
