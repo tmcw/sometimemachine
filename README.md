@@ -46,3 +46,19 @@ Import a changeset dump into sqlite:
 
 * [Contributors by Level By Month](http://bl.ocks.org/3751212)
 * [up to 10 edits](http://bl.ocks.org/3751255)
+
+## Graphs
+
+These guys you can generate with scripts but are too heavy to put on gist.
+
+When users register versus how likely they are to contribute for more than
+a year. Nearly all of the early users of OpenStreetMap contributed more
+than a year, while users who started contributing 2 years ago are much
+less likely.
+
+![](https://raw.github.com/tmcw/sometimemachine/master/lifetime/graph.png)
+
+Changesets in the last 3 months (dark red), last year (orange), all time
+(light orange)
+
+![](https://raw.github.com/tmcw/sometimemachine/master/changesets_month.png)
