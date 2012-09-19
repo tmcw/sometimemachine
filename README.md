@@ -62,3 +62,8 @@ Changesets in the last 3 months (dark red), last year (orange), all time
 (light orange)
 
 ![](https://raw.github.com/tmcw/sometimemachine/master/changesets_month.png)
+
+User lives histogram. Of course, the vast majority of users last less than
+two days. It's an exponential distribution from there on with no clear peaks.
+
+![](https://raw.github.com/tmcw/sometimemachine/master/lives/user_lives.png)
