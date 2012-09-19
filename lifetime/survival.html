@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+body {
+  font: 10px sans-serif;
+}
+
+path.area {
+}
+
+text.title {
+    font:13px sans-serif;
+}
+.axis path {
+    display: none;
+}
+.axis line {
+    shape-rendering: crispEdges;
+    stroke: #222;
+}
+
+.axis .minor line {
+    stroke: #222;
+    stroke-dasharray: 2,2;
+}
+text.legend {
+    fill:#fff;
+}
+</style>
+<body>
+<script src="http://d3js.org/d3.v2.min.js?2.10.0"></script>
+<script>
+
+d3.json('starts_compare.json', function(starts) {
+
+
+var year_ago = (+new Date() / 1000) - 31556926 - (60 * 60 * 24 * 10);
+var values = starts.filter(function(v) {
+    return v.start < year_ago;
+}).sort(function(a, b) {
+    return a.start - b.start;
+}).map(function(s) {
+    return {
+        survive: s.survive,
+        start: new Date(s.start * 1000)
+    };
+});
+
+var survive = values.filter(function(v) {
+    return v.survive === 1;
+});
+
+var nosurvive = values.filter(function(v) {
+    return v.survive === 0;
+});
+
+var formatCount = d3.format(",.0f");
+
+var margin = {top: 10, right: 30, bottom: 30, left: 30},
+    width = 960 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
+
+var x = d3.time.scale()
+    .domain([d3.min(values, function(v) { return v.start; }), d3.max(values, function(v) { return v.start })])
+    .range([0, width]);
+
+// Generate a histogram using twenty uniformly-spaced bins.
+var survive_data = d3.layout.histogram()
+    .value(function(d) { return d.start; })
+    .bins(x.ticks(50))(survive);
+
+var nosurvive_data = d3.layout.histogram()
+    .value(function(d) { return d.start; })
+    .bins(x.ticks(50))(nosurvive);
+
+function s(x) {
+    return {
+        x: x.x,
+        y: x.y
+    };
+}
+
+survive_data = survive_data.map(s);
+nosurvive_data = nosurvive_data.map(s);
+
+var y = d3.scale.linear()
+    .domain([0, 1])
+    .range([height, 0]);
+
+stack = d3.layout.stack().offset('expand')([nosurvive_data, survive_data]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var area = d3.svg.area()
+    .x(function(d) { return x(d.x); })
+    .y0(function(d) { return 0; })
+    .y1(function(d) { return y(d.y0); });
+
+var s = d3.scale.category20c();
+
+svg.selectAll("path")
+    .data(stack)
+    .enter().append("path")
+    .attr('class', 'area')
+    .style('fill', function(d, i) {
+        return s(i);
+    })
+    .attr("d", area)
+svg.append('text')
+    .attr('class', 'legend')
+    .text('users who continue contributing after 1 year')
+    .attr({ x: 20, y: 20 });
+
+svg.append('text')
+    .attr('class', 'legend')
+    .text('users who stop contributing after 1 year')
+    .attr({ x: width - 210, y: height - 20 });
+
+svg.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
+});
+</script>
+
