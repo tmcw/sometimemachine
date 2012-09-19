@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+body {
+  font: 10px sans-serif;
+}
+
+.bar rect {
+  fill: steelblue;
+  shape-rendering: crispEdges;
+}
+
+.bar text {
+  fill: #fff;
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+</style>
+<body>
+<script src="http://d3js.org/d3.v2.min.js?2.10.0"></script>
+<script>
+d3.json('num_changes.json', function(values) {
+
+    values.sort(function(b, a) { return a - b; });
+
+    function percentage(n) {
+        var top_ten = values.slice(0, Math.floor(values.length / (100 / n)));
+        var the_rest = values.slice(Math.floor(values.length / (100 / n)));
+        var perc = 100 * (d3.sum(top_ten) / d3.sum(values));
+        console.log('The top ' + n + '% of contributors are responsible for ' + perc.toFixed(3) + '% of all contributions.');
+    }
+
+    percentage(50);
+    percentage(25);
+    percentage(1);
+    percentage(0.1);
+    percentage(0.01);
+});
+</script>

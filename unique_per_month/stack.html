@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+body {
+  font: 10px sans-serif;
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+path.area {
+}
+
+path.line {
+    stroke: steelblue;
+    fill: transparent;
+}
+
+text.title {
+    font:20px sans-serif;
+    fill: #222;
+}
+
+text.key-title {
+    font:bold 16px sans-serif;
+    text-anchor:middle;
+}
+
+</style>
+<body>
+<script src="http://d3js.org/d3.v2.min.js?2.10.0"></script>
+<script>
+
+d3.json('five_stack.json', function(values) {
+    values = values.map(function(values) {
+        for (var i = 0; i < values.length; i++) {
+            values[i].x = new Date(values[i].x * 1000);
+        }
+        return values;
+    });
+
+var formatCount = d3.format(",.0f");
+
+var margin = {top: 10, right: 100, bottom: 30, left: 30},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var x = d3.time.scale()
+    .domain([
+    d3.min(values[0], function(d) { return d.x }),
+    d3.max(values[0], function(d) { return d.x })])
+    .range([0, width]);
+
+var y = d3.scale.linear()
+    .domain([0, d3.max(values.map(function(v) { return d3.max(v, function(d) { return d.y; })}))])
+    .range([height, 0]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("right");
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var area = d3.svg.area()
+    .interpolate("monotone")
+    .x(function(d) { return x(d.x); })
+    .y0(height)
+    .y1(function(d) { return y(d.y); });
+
+svg.append("text")
+    .attr({ x: 10, y: 20, 'class': 'title' })
+    .text('Active contributors to OpenStreetMap per Month');
+
+var PRGn = ["rgb(123,50,148)","rgb(194,165,207)","rgb(247,247,247)","rgb(166,219,160)","rgb(0,136,55)"];
+
+var z = d3.scale.ordinal()
+    .domain(d3.range(5))
+    .range(PRGn);
+
+var circles = svg.selectAll('g.key')
+    .data(d3.range(5))
+    .enter()
+    .append('g')
+    .attr('class', 'key')
+    .attr('transform', function(d) { return 'translate(' + (30 + d * 50) + ',60)'; });
+
+circles.append('circle')
+    .attr('r', 20)
+    .style("fill", function(d, i) { return z(i); });
+
+circles.append('circle')
+    .attr('r', 15)
+    .style("fill", '#fff');
+
+circles.append('text')
+    .attr('class', 'key-title')
+    .attr('dy', 5)
+    .text(function(d) { return d + 1; });
+
+svg.selectAll('path.area')
+    .data(values)
+    .enter()
+    .append('path')
+    .attr("class", "area")
+    .style("fill", function(d, i) { return z(i); })
+    .attr('d', area);
+
+svg.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
+
+svg.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(" + width + ", 0)")
+    .call(yAxis);
+
+});
+</script>
