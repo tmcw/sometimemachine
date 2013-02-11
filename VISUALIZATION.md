@@ -1,3 +1,15 @@
+## Background
+
+This is how I typically make GIFs and videos. The first step is always
+frames, and my tool of choice is [node-canvas](https://github.com/LearnBoost/node-canvas)
+because it's relatively simple and fast.
+
+Since you're painting lots of frames, rendering can be time-intensive. Rules
+of thumb for rendering fast with Canvas:
+
+* Round your pixels. Never draw on the half pixel. Use `~~` to make this small and fast.
+* Minimize changes to your palette - touching `fillStyle` and `strokeStyle` is _extremely performance intensive_.
+
 ## GIFs
 
 Tools:
@@ -39,6 +51,8 @@ Then convert to gif:
     gifsicle --loop -d20 *.gif > ../anim.gif
 
 ## Videos
+
+Examples: [keyss](http://vimeo.com/53993679), [osm edits](http://vimeo.com/53991791), [runs](http://vimeo.com/53026392), [centers of edits](http://vimeo.com/53021947)
 
 Same kind of make-images thing as with GIFs, with a few diffs. Install
 ffmpeg
