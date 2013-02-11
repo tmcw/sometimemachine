@@ -37,6 +37,8 @@ Import a changeset dump into sqlite:
 
 ## Products
 
+Videos: [OSM Edits](http://vimeo.com/53991791), [centers of OSM edits](http://vimeo.com/53021947).
+
 `unique_per_day.js`
 
 * [Active Contributors Per Month](http://bl.ocks.org/3750490)
