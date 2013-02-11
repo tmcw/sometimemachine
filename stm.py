@@ -22,22 +22,18 @@ cur.execute("""PRAGMA locking_mode=EXCLUSIVE""")
 cur.execute("""PRAGMA journal_mode=DELETE""")
 
 query = """insert into osm_changeset
-    (rowid, user_id, lon, lat, closed_at, num_changes)
-    values (?, ?, ?, ?, ?, ?)"""
+    (rowid, user_id, min_lon, min_lat, max_lon, max_lat, closed_at, num_changes)
+    values (?, ?, ?, ?, ?, ?, ?, ?)"""
 
 def save(attrib):
-    if attrib.has_key('min_lat'):
-        lat = round((float(attrib['min_lat']) + float(attrib['max_lat'])) / 2.0)
-        lon = round((float(attrib['min_lon']) + float(attrib['max_lon'])) / 2.0)
-    else:
-        lat = 0
-        lon = 0
     attrib_id = int(attrib['id'])
     cur.execute(query,
         (attrib_id,
         int(attrib.get('uid', -1)),
-        lon,
-        lat,
+        float(attrib.get('min_lon', 0)),
+        float(attrib.get('min_lat', 0)),
+        float(attrib.get('max_lon', 0)),
+        float(attrib.get('max_lat', 0)),
         int(parse(attrib["created_at"]).strftime('%s')),
         int(attrib['num_changes'])))
     if (attrib_id % 100000 == 0):

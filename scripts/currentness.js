@@ -22,8 +22,9 @@ function y(lat) {
 
 var drawn = {};
 
-ctx.fillStyle = '#fee8c8';
-db.each("SELECT lon, lat FROM osm_changeset where closed_at < 1325397600;", function(err, row) {
+ctx.fillStyle = '#ff0033';
+db.each("SELECT lon, lat FROM osm_changeset GROUP BY round(closed_at / 8640000) LIMIT 1;", function(err, row) {
+    console.log(row);
     var xp = Math.floor(x(row.lon));
     var yp = Math.floor(y(row.lat));
     var k = xp + ' ' + yp;
@@ -35,35 +36,4 @@ db.each("SELECT lon, lat FROM osm_changeset where closed_at < 1325397600;", func
     drawn[k] = true;
 }, function() {
     fs.writeFileSync('changesets_before.png', c.toBuffer());
-    ctx.fillStyle = '#fdbb84';
-    console.log('done with before');
-    drawn = {};
-    db.each("SELECT lon, lat FROM osm_changeset where closed_at > 1325397600;", function(err, row) {
-        var xp = Math.floor(x(row.lon));
-        var yp = Math.floor(y(row.lat));
-        var k = xp + ' ' + yp;
-        if (drawn[k]) return;
-        ctx.fillRect(
-            xp,
-            yp,
-            block + 1, block + 1);
-    }, function() {
-            fs.writeFileSync('changesets_2012.png', c.toBuffer());
-            ctx.fillStyle = '#e34a33';
-            console.log('done with 2012');
-            drawn = {};
-            db.each("SELECT lon, lat FROM osm_changeset where closed_at > 1338526800;", function(err, row) {
-                var xp = Math.floor(x(row.lon));
-                var yp = Math.floor(y(row.lat));
-                var k = xp + ' ' + yp;
-                if (drawn[k]) return;
-                ctx.fillRect(
-                    xp,
-                    yp,
-                    block + 1, block + 1);
-            }, function() {
-                console.log('done with month');
-                fs.writeFileSync('changesets_month.png', c.toBuffer());
-            });
-    });
 });
