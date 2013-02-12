@@ -10,7 +10,7 @@ if (len(sys.argv) < 2):
 osm_filename = sys.argv[1]
 sqlite_filename = sys.argv[2]
 
-print "piping %s -> %s" % (osm_filename, sqlite_filename)
+print("piping %s -> %s" % (osm_filename, sqlite_filename))
 
 conn = sqlite3.connect(sqlite_filename)
 
@@ -38,7 +38,7 @@ def save(attrib):
         int(attrib['num_changes'])))
     if (attrib_id % 100000 == 0):
         conn.commit()
-        print "%d done" % int(attrib['id'])
+        print("%d done" % int(attrib['id']))
 
 def start_element(name, attrs):
     if name == 'changeset':
