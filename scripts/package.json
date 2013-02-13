@@ -1,0 +1,17 @@
+{
+  "name": "sometimemachine-scripts",
+  "version": "0.0.0",
+  "description": "ERROR: No README.md file found!",
+  "main": "bboxes.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "author": "",
+  "license": "BSD",
+  "dependencies": {
+    "sqlite3": "~2.1.5",
+    "canvas": "~1.0.0",
+    "moment": "~2.0.0"
+  }
+}
