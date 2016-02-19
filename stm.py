@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import sqlite3, sys
 import xml.parsers.expat
@@ -15,7 +15,7 @@ print("piping %s -> %s" % (osm_filename, sqlite_filename))
 conn = sqlite3.connect(sqlite_filename)
 
 cur = conn.cursor()
-
+tmp_attrib_id = -1
 # Optimize connection
 cur.execute("""PRAGMA synchronous=0""")
 cur.execute("""PRAGMA locking_mode=EXCLUSIVE""")
@@ -24,6 +24,9 @@ cur.execute("""PRAGMA journal_mode=DELETE""")
 query = """insert into osm_changeset
     (rowid, user_id, min_lon, min_lat, max_lon, max_lat, closed_at, num_changes)
     values (?, ?, ?, ?, ?, ?, ?, ?)"""
+
+
+update_query = """update osm_changeset SET msg=? WHERE rowid = ?"""
 
 def save(attrib):
     attrib_id = int(attrib['id'])
@@ -40,11 +43,23 @@ def save(attrib):
         conn.commit()
         print("%d done" % int(attrib['id']))
 
+
 def start_element(name, attrs):
+    global tmp_attrib_id
     if name == 'changeset':
         save(attrs)
+        tmp_attrib_id = attrs['id']
+    elif name == 'tag' and attrs['k'] =='comment':
+        cur.execute(update_query,(str(attrs['v']),int(tmp_attrib_id)))
+
+def end_element(name):
+    if name == 'changeset':
+        tmp_attrib_id=-1
+
 
 p = xml.parsers.expat.ParserCreate()
 p.StartElementHandler = start_element
+p.EndElementHandler = end_element
 
-p.ParseFile(open(osm_filename))
+p.ParseFile(open(osm_filename, 'rb'))
+conn.commit()
