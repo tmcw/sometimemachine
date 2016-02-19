@@ -4,6 +4,7 @@ CREATE TABLE osm_changeset (
   min_lat REAL,
   max_lon REAL,
   max_lat REAL,
+  msg VARCHAR(512),
   closed_at INTEGER,
   num_changes INTEGER
 );
