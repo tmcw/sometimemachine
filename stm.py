@@ -3,9 +3,10 @@
 import sqlite3, sys
 import xml.parsers.expat
 from dateutil.parser import parse
+import bz2
 
 if (len(sys.argv) < 2):
-    raise 'Usage: stm.py changeset.osm db.sqlite'
+    raise 'Usage: stm.py changeset.osm[.bz2] db.sqlite'
 
 osm_filename = sys.argv[1]
 sqlite_filename = sys.argv[2]
@@ -61,5 +62,8 @@ p = xml.parsers.expat.ParserCreate()
 p.StartElementHandler = start_element
 p.EndElementHandler = end_element
 
-p.ParseFile(open(osm_filename, 'rb'))
+if sys.argv[1].endswith('bz2'):
+    p.ParseFile(bz2.open(osm_filename, 'rb'))
+else:
+    p.ParseFile(open(osm_filename, 'rb'))
 conn.commit()
