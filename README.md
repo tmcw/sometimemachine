@@ -29,7 +29,7 @@ Initialize an SQLite file:
 
 Import a changeset dump into sqlite:
 
-    python stm.py changesets-latest.osm changesets.sqlite
+    python stm.py changesets-latest.osm[.bz2] changesets.sqlite
 
  Indexes
 
